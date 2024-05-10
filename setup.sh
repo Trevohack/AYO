@@ -29,16 +29,16 @@ $RESET
 
 init() {
     echo -e "[$GREEN+$RESET] Configuring Environment..."
-    mkdir -p ~/Documents/ayo
+    mkdir ~/Documents/ayo
     cd ~/Documents/ayo 
 }
 
 install() {
     echo -e "[$GREEN+$RESET] Downloading AYO..."
-    wget https://raw.githubusercontent.com/Trevohack/AYO/main/src/main.py -O main.py 
-    wget https://raw.githubusercontent.com/Trevohack/AYO/main/src/machine_data.json -O machine_data.json
+    wget https://raw.githubusercontent.com/Trevohack/AYO/main/src/main.py -O ~/Documents/ayo/main.py 
+    wget https://raw.githubusercontent.com/Trevohack/AYO/main/src/machine_data.json -O ~/Documents/ayo/machine_data.json
 
-    sudo main.py /usr/bin/ayo 
+    sudo ~/Documents/ayo/main.py /usr/bin/ayo 
     sudo chmod +x /usr/bin/ayo 
 }
 
