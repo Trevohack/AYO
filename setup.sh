@@ -8,11 +8,6 @@ YELLOW='\033[0;33m'
 RESET='\033[0m' 
 
 
-if [[ $(id -u) -ne "0" ]]; then
-    echo -e "[$RED-$RESET] This script should run as root!" >&2 
-    exit 1
-fi
-
 banner() {
     echo -e """
 $RED 
@@ -35,14 +30,15 @@ $RESET
 init() {
     echo -e "[$GREEN+$RESET] Configuring Environment..."
     mkdir -p ~/Documents/ayo
+    cd ~/Documents/ayo 
 }
 
 install() {
     echo -e "[$GREEN+$RESET] Downloading AYO..."
-    wget https://raw.githubusercontent.com/Trevohack/AYO/main/src/main.py -O ~/Documents/ayo/main.py 
-    wget https://raw.githubusercontent.com/Trevohack/AYO/main/src/machine_data.json -O ~/Documents/ayo/machine_data.json
+    wget https://raw.githubusercontent.com/Trevohack/AYO/main/src/main.py -O main.py 
+    wget https://raw.githubusercontent.com/Trevohack/AYO/main/src/machine_data.json -O machine_data.json
 
-    sudo cp ~/Documents/ayo/main.py /usr/bin/ayo 
+    sudo main.py /usr/bin/ayo 
     sudo chmod +x /usr/bin/ayo 
 }
 
