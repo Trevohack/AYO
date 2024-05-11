@@ -25,10 +25,11 @@
 * Welcome to AYO, your simple CTF (Capture The Flag) environment manager! AYO focuses on providing an easy-to-use interface for setting up and managing variables crucial for CTFs, such as `rhost` (remote host), `domain`, `url`, and more. With AYO, you can quickly configure your CTF environment and retrieve information with just a few simple commands.
 
 * AYO is an efficient CTF Manager that can do multiple tasks:
-		1. Hold box info 
-		2. Retrieve box info easily 
-		3. Set or change box data easily 
-		4. Add new boxes
+	 - Hold box info 
+	 - Retrieve box info easily 
+	 - Set or change box data easily 
+	 - Add new boxes
+	 - Configure hosts file 
 
 
 
