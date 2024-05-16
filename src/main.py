@@ -17,11 +17,10 @@ from rich.console import Console
 from rich.table import Table 
 
 
-
-user = getpass.getuser() 
+ 
 hosts = Hosts(path='/etc/hosts')
 console = Console()
-data_file = f"/home/{user}/Documents/ayo/machine_data.json"
+data_file = f"/home/{getpass.getuser()}/Documents/ayo/machine_data.json"
 
 
 def banner():
@@ -93,6 +92,10 @@ def main():
 
         with open(data_file, 'w') as file:
             json.dump(data, file, indent=4)
+
+        new_box = HostsEntry(entry_type='ipv4', address=args.rhost, names=[args.domain])
+        hosts.add([new_box])
+        hosts.write()
 
         print_box_info()
         console.print(f"[green][+] {args.ctf_name} box added! [/]")
