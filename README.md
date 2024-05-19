@@ -95,7 +95,9 @@ curl $(ayo get domain)/rev-shell.php
 2. **Clone The Repository:**  
 ```bash
 git clone https://github.com/Trevohack/AYO
-cd AYO 
+cd AYO
+pip install rich
+pip install python-hosts
 sudo cp main.py /usr/bin/ayo 
 sudo chmod +x /usr/bin/ayo
 ```
