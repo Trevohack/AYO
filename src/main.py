@@ -20,7 +20,9 @@ from rich.table import Table
  
 hosts = Hosts(path='/etc/hosts')
 console = Console()
-data_file = f"/home/{getpass.getuser()}/Documents/ayo/machine_data.json"
+data_file = "/home/treveen/Documents/ayo/machine_data.json"
+htb_path = "/home/treveen/htb"
+thm_path = "/home/treveen/thm"
 
 
 def banner():
@@ -34,6 +36,14 @@ def banner():
 
 [/]                                              
 """)
+
+def get_box_data():
+    global data_file 
+
+    with open(data_file, 'r') as file:
+        data = json.load(file)
+    return data
+
 
 def print_box_info():
     global data_file 
@@ -59,7 +69,8 @@ def print_box_info():
 
 
 def main():
-    global data_file
+    global data_file 
+    global args
 
     parser = argparse.ArgumentParser(description='AYO - CTF Manager [Help Menu]')
     subparsers = parser.add_subparsers(dest='command', help='Update or get data')
@@ -80,43 +91,82 @@ def main():
 
     args = parser.parse_args()
 
-    with open(data_file, 'r') as file:
-        data = json.load(file)
-
     if args.command == 'new':
-        data['current_box'] = args.ctf_name
-        data['rhost'] = args.rhost
-        data['domain'] = args.domain
-        data['platform'] = args.platform
-        data['status'] = args.active
+        new_box(args)
+    if args.command == 'get':
+        get_info(args)
+    if args.command == 'set':
+        set_info(args)
+
+
+def new_box(args):
+    global data_file 
+    global htb_path
+    global thm_path
+
+    htb_list = ["htb", "HackTheBox", "HTB", "HACKTHEBOX"]
+    thm_list = ["thm", "TryHackMe", "THM", "TRYHACKME"]
+    data = get_box_data()
+
+    data['current_box'] = args.ctf_name
+    data['rhost'] = args.rhost
+    data['domain'] = args.domain
+    data['platform'] = args.platform
+    data['status'] = args.active
+
+    with open(data_file, 'w') as file:
+        json.dump(data, file, indent=4)
+
+    new_box = HostsEntry(entry_type='ipv4', address=args.rhost, names=[args.domain])
+    hosts.add([new_box])
+    hosts.write()
+
+    print_box_info()
+    
+    create_dir = console.input(f"[green]Create a directory for {args.ctf_name}? (y/n): [/]")
+    if create_dir == "y" or create_dir == "yes":
+        if args.platform in htb_list:
+            ctf_path = os.path.join(htb_path, args.ctf_name) 
+        elif args.platform in thm_list:
+            ctf_path = os.path.join(thm_path, args.ctf_name) 
+
+        try:
+            os.makedirs(ctf_path)
+            console.print(f"[green][+] Directory '{ctf_path}' created successfully.[/]")
+        except FileExistsError:
+            print(f"Directory '{ctf_path}' already exists.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+    else:
+        console.print(f"[green][+] No directory was created for {args.ctf_name}!")
+
+    console.print(f"[green][+] {args.ctf_name} box added! [/]") 
+
+
+def get_info(args):
+    global data_file 
+
+    data = get_box_data()
+
+    if args.info in data:
+        print(data[args.info])
+    else:
+        console.print(f"[red][-] Unsupported info: {args.info} [/]")
+
+def set_info(args):
+    global data_file 
+
+    data = get_box_data() 
+    if args.var and args.value:
+        data[args.var] = args.value
 
         with open(data_file, 'w') as file:
             json.dump(data, file, indent=4)
 
-        new_box = HostsEntry(entry_type='ipv4', address=args.rhost, names=[args.domain])
-        hosts.add([new_box])
-        hosts.write()
-
-        print_box_info()
-        console.print(f"[green][+] {args.ctf_name} box added! [/]")
-
-    elif args.command == 'get':
-        if args.info in data:
-            print(data[args.info])
-        else:
-            console.print(f"[red][-] Unsupported info: {args.info} [/]")
-
-    elif args.command == 'set':
-        if args.var and args.value:
-            data[args.var] = args.value
-
-            with open(data_file, 'w') as file:
-                json.dump(data, file, indent=4)
-
-            console.print(f"[green][+] Set {args.var} to {args.value} [/]")
-        else:
-            console.print("[red][-] Please provide both [bold]--var[/] and [bold]--value arguments[/][red] for setting a variable [/]")
-            sys.exit()
+        console.print(f"[green][+] Set {args.var} to {args.value} [/]")
+    else:
+        console.print("[red][-] Please provide both [bold]--var[/] and [bold]--value arguments[/][red] for setting a variable [/]")
+        sys.exit()
 
 if __name__ == "__main__":
     main()
