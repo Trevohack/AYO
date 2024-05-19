@@ -29,7 +29,9 @@ ${RESET}"
 init() {
     echo -e "[${GREEN}+${RESET}] Configuring Environment..."
     mkdir -p "/home/$name/Documents/ayo"
-    cd "/home/$name/Documents/ayo" || exit
+    cd "/home/$name/Documents/ayo"
+    pip install rich
+    pip install python-hosts
 }
 
 install() {
