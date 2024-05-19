@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Author: Trevohack
+# AYO 2.0 
 
 
 RED='\033[0;31m'
